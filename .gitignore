@@ -1,0 +1,9 @@
+.idea/
+venv/
+*.pyc
+
+.tox/
+
+sdk_ermeo.egg-info/
+
+.env
