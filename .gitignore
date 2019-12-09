@@ -7,3 +7,6 @@ venv/
 sdk_ermeo.egg-info/
 
 .env
+
+build/
+dist/

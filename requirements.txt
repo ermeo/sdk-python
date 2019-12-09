@@ -1,0 +1,3 @@
+marshmallow==3.2.2
+requests==v2.22.0
+tox==3.14.2
