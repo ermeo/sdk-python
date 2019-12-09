@@ -1,5 +1,6 @@
 # Python SDK  
 [![Latest Build](https://travis-ci.org/ermeo/sdk-python.svg?branch=master)](https://travis-ci.org/ermeo/sdk-python.svg?branch=master)
+[![codecov](https://codecov.io/gh/ermeo/sdk-python/branch/master/graph/badge.svg)](https://codecov.io/gh/ermeo/sdk-python)
 
 This is a Python client for the Ermeo Data API. The sdk-ermeo is a wrapper to simplify access to ressources requests and JSON response parsing from the API Ermeo. This package evolving with the API.
 
