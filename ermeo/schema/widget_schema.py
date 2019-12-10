@@ -2,7 +2,8 @@ from marshmallow import Schema, fields, validate
 
 type_enum = ['action', 'multiple_choice', 'picture_choice', 'ab_choice', 'array', 'yes_no', 'opinion_scale',
              'location', 'phone_information', 'photo', 'signature', 'text', 'date', 'number', 'barcode', 'duration',
-             'rating', 'send_emails', 'phone', 'image', 'asset', 'section', 'repeat_section', 'transfer', 'end_send', 'text_information', 'duration_information'
+             'rating', 'send_emails', 'phone', 'image', 'asset', 'section', 'repeat_section', 'transfer', 'end_send',
+             'text_information', 'duration_information',
              'number_information', 'pdf', 'web_page', 'template', 'document', 'tools', 'hour']
 category_enum = ['task', 'organization', 'information']
 
@@ -22,5 +23,5 @@ class WidgetSchema(Schema):
     icon = fields.Str(required=True)
     category = fields.Str(validate=[validate.OneOf(category_enum)])
     type = fields.Str(required=True, validate=[validate.OneOf(type_enum), ])
-        
+
     settings = fields.Nested(SettingSchema)
