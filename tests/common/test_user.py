@@ -9,16 +9,16 @@ from time import sleep
 def fixtures():
     faker = Faker()
     data = {
-        'user_code': "".join(faker.random_letters(length=faker.random_int(min=0, max=99, step=1))),
+        'user_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_first_name': faker.first_name(),
         'user_last_name': faker.first_name(),
         'user_email': faker.email(),
-        'user_password': "".join(faker.random_letters(length=faker.random_int(min=0, max=99, step=1))),
+        'user_password': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_is_enabled': faker.boolean(chance_of_getting_true=50),
         'user_timezone': faker.timezone(),
         'user_locale': random.choice(['en', 'fr']),
 
-        'user_updated_code': "".join(faker.random_letters(length=faker.random_int(min=0, max=99, step=1))),
+        'user_updated_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_updated_first_name': faker.first_name(),
         'user_updated_last_name': faker.first_name(),
         'user_updated_email': faker.email(),
@@ -48,6 +48,9 @@ def test_create_update_user(fixtures):
     assert user_created["is_enabled"] == user["is_enabled"]
     assert user_created["timezone"] == user["timezone"]
     assert user_created["locale"] == user["locale"]
+    sleep(SLEEP)
+    user_get = API.user.get(user_created["id"])
+    assert user_get["code"] == fixtures["user_code"]
 
     user_update = {
         "code": fixtures["user_updated_code"],
@@ -90,15 +93,15 @@ def test_search_users(fixtures):
 
 
 def test_get_users():
-    user = API.user.get(limit=1, sort="created_at:desc")
+    user = API.user.list(limit=1, sort="created_at:desc")
     assert len(user) == 1
-    users = API.user.get(limit=2, sort="created_at:asc")
+    users = API.user.list(limit=2, sort="created_at:asc")
     assert len(users) == 2
     assert user[0]["code"] is not users[0]["code"]
 
-    user_raw = API.user.get(limit=1, raw=True)
-    user_recursive = API.user.get(limit=10, recursive=True)
+    user_raw = API.user.list(limit=1, raw=True)
+    user_recursive = API.user.list(limit=10, recursive=True)
     assert int(user_raw["total_items"]) == len(user_recursive)
 
     with pytest.raises(Exception):
-        API.folder.get(limit=1, sort="created_ats:desc")
+        API.user.list(limit=1, sort="created_ats:desc")

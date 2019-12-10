@@ -8,8 +8,8 @@ from time import sleep
 def fixtures():
     faker = Faker()
     data = {
-        'folder_parent_name': "".join(faker.random_letters(length=faker.random_int(min=0, max=99, step=1))),
-        'folder_children_name': "".join(faker.random_letters(length=faker.random_int(min=0, max=99, step=1))),
+        'folder_parent_name': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
+        'folder_children_name': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
     }
     return data
 
@@ -71,16 +71,57 @@ def test_search_folders(fixtures):
     assert parent_folder[0]["name"] == fixtures["folder_parent_name"]
 
 
-def test_get_folders():
-    folder_1 = API.folder.get(limit=1, sort="created_at:desc")
+def test_list_folders():
+    sleep(SLEEP)
+    folder_1 = API.folder.list(limit=1, sort="created_at:desc")
     assert len(folder_1) == 1
-    folders_1 = API.folder.get(limit=2, sort="created_at:asc")
+    folders_1 = API.folder.list(limit=2, sort="created_at:asc")
     assert len(folders_1) == 2
     assert folder_1[0]["name"] is not folders_1[0]["name"]
 
-    folder_raw = API.folder.get(limit=1, raw=True)
-    folder_recursive = API.folder.get(limit=10, recursive=True)
+    folder_raw = API.folder.list(limit=1, raw=True)
+    folder_recursive = API.folder.list(limit=10, recursive=True)
     assert int(folder_raw["total_items"]) == len(folder_recursive)
 
     with pytest.raises(Exception):
-        API.folder.get(limit=1, sort="created_ats:desc")
+        API.folder.list(limit=1, sort="created_ats:desc")
+
+
+def test_search_folders(fixtures):
+    ## We sleep because the API Must reindex some results
+    sleep(SLEEP)
+    search_folder = \
+    [
+        {
+            "name": [
+                {
+                    "operator": "equals",
+                    "value": {
+                        "text": fixtures["folder_parent_name"]
+                    }
+                }
+            ]
+        }
+    ]
+    folder = API.folder.search(search_dict=search_folder)
+    assert folder[0]["name"] == fixtures["folder_parent_name"]
+
+
+def test_delete_folder(fixtures):
+    search_folder = \
+        [
+            {
+                "name": [
+                    {
+                        "operator": "equals",
+                        "value": {
+                            "text": fixtures["folder_parent_name"]
+                        }
+                    }
+                ]
+            }
+        ]
+    folder = API.folder.search(search_dict=search_folder)
+    API.folder.delete(folder[0]["id"])
+    with pytest.raises(Exception):
+        API.folder.get(folder[0]["id"])

@@ -18,7 +18,7 @@ class Resource(metaclass=abc.ABCMeta):
         self.api_ressource_url = api_ressource_url
         self.schema = schema
 
-    def get(self, page: int = 1, limit: int = API_LIMIT, sort: str = API_SORT_DEFAULT, raw: bool = False,
+    def list(self, page: int = 1, limit: int = API_LIMIT, sort: str = API_SORT_DEFAULT, raw: bool = False,
             items: list = False, recursive: bool = False) -> list:
         """
         Get All item from a ressource
@@ -48,6 +48,27 @@ class Resource(metaclass=abc.ABCMeta):
         recursive_items = self.parse_items_recursive(data, previous_items, page, limit)
         return recursive_items
 
+    def get(self, id: str):
+        """
+        Get a resource
+        @param id: str
+        @return: Json
+        """
+
+        r = requests.get(self.api_ressource_url + '/' + id, headers=self.ermeo_v1.auth.get_headers())
+        self.ermeo_v1.check_request(r)
+        return r.json()
+
+    def delete(self, id: str):
+        """
+        Get a resource
+        @param id: str
+        @return: Json
+        """
+        r = requests.delete(self.api_ressource_url + '/' + id, headers=self.ermeo_v1.auth.get_headers())
+        self.ermeo_v1.check_request(r)
+        return r.json()
+
     def parse_items_recursive(self, data: object, items: list, page: int = 1, limit: int = 10) -> list:
         """
         Parse items and loop
@@ -63,7 +84,7 @@ class Resource(metaclass=abc.ABCMeta):
                 items.append(new_item)
         if data["next_page"]:
             next_page = page + 1
-            self.get(page=next_page, recursive=True, items=items, limit=limit)
+            self.list(page=next_page, recursive=True, items=items, limit=limit)
         return items
 
     def create(self, data: dict):

@@ -12,3 +12,6 @@ class User(Resource):
     def __init__(self, ermeo_v1: ErmeoV1):
         self.ermeo_v1 = ermeo_v1
         super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_USER_URL, UserSchema)
+
+    def delete(self, search_dict: dict, raw: bool = False):
+        raise NotImplementedError
