@@ -1,8 +1,8 @@
 import abc
-from ermeo.const import API_LIMIT, API_SORT_DEFAULT, API_SEARCH_URL
 import requests
-from ermeo.ermeo import ErmeoV1
 from marshmallow import Schema
+from ermeo.ermeo import ErmeoV1
+from ermeo.const import API_LIMIT, API_SORT_DEFAULT, API_SEARCH_URL
 
 
 class Resource(metaclass=abc.ABCMeta):
@@ -18,7 +18,8 @@ class Resource(metaclass=abc.ABCMeta):
         self.api_ressource_url = api_ressource_url
         self.schema = schema
 
-    def get(self, page: int = 1, limit: int = API_LIMIT, sort: str = API_SORT_DEFAULT, raw: bool = False) -> list:
+    def get(self, page: int = 1, limit: int = API_LIMIT, sort: str = API_SORT_DEFAULT, raw: bool = False,
+            items: list = False, recursive: bool = False) -> list:
         """
         Get All item from a ressource
         @param page: int
@@ -26,9 +27,14 @@ class Resource(metaclass=abc.ABCMeta):
         @param sort: int
         @param sort: int
         @param raw: bool If we want the flat list
-        @return: List
+        @param items: add previous results
+        @param recursive: for iteration, and get all results in one time
+        @return: List or Json from API if Raw
         """
 
+        ## we must use raw for parsing loop in recursive mode
+        raw = True if recursive else raw
+        previous_items  = items if items else []
         r = requests.get(
             self.api_ressource_url,
             headers=self.ermeo_v1.auth.get_headers(),
@@ -36,7 +42,29 @@ class Resource(metaclass=abc.ABCMeta):
         )
         self.ermeo_v1.check_request(r)
         data = r.json()
-        return data if raw else data["items"]
+        if not recursive:
+            return data if raw else data["items"]
+
+        recursive_items = self.parse_items_recursive(data, previous_items, page, limit)
+        return recursive_items
+
+    def parse_items_recursive(self, data: object, items: list, page: int = 1, limit: int = 10) -> list:
+        """
+        Parse items and loop
+        :param data:
+        :param items:
+        :param page:
+        :param limit:
+        :return:
+        """
+        if "items" in data:
+            new_items = data["items"]
+            for new_item in new_items:
+                items.append(new_item)
+        if data["next_page"]:
+            next_page = page + 1
+            self.get(page=next_page, recursive=True, items=items, limit=limit)
+        return items
 
     def create(self, data: dict):
         """
