@@ -10,3 +10,7 @@ sdk_ermeo.egg-info/
 
 build/
 dist/
+
+.coverage
+
+coverage.xml

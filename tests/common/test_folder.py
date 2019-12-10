@@ -72,10 +72,15 @@ def test_search_folders(fixtures):
 
 
 def test_get_folders():
-    folders_1 = API.folder.get(limit=1, sort="created_at:desc")
-    assert len(folders_1) == 1
-    folders_2 = API.folder.get(limit=2, sort="created_at:asc")
-    assert len(folders_2) == 2
-    assert folders_1[0]["name"] is not folders_2[0]["name"]
+    folder_1 = API.folder.get(limit=1, sort="created_at:desc")
+    assert len(folder_1) == 1
+    folders_1 = API.folder.get(limit=2, sort="created_at:asc")
+    assert len(folders_1) == 2
+    assert folder_1[0]["name"] is not folders_1[0]["name"]
+
+    folder_raw = API.folder.get(limit=1, raw=True)
+    folder_recursive = API.folder.get(limit=10, recursive=True)
+    assert int(folder_raw["total_items"]) == len(folder_recursive)
+
     with pytest.raises(Exception):
-        API.folder.get_folders(limit=1, sort="created_ats:desc")
+        API.folder.get(limit=1, sort="created_ats:desc")
