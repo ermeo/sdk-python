@@ -78,6 +78,19 @@ class Resource(metaclass=abc.ABCMeta):
         self.ermeo_v1.check_request(r)
         return r.json()
 
+    def update(self, data: dict, id: str):
+        """
+        Update a resource
+        @param data: dict
+        @param id: str
+        @return: Json
+        """
+
+        validated_data = self.schema().load(data)
+        r = requests.put(self.api_ressource_url + '/' + id, json=validated_data, headers=self.ermeo_v1.auth.get_headers())
+        self.ermeo_v1.check_request(r)
+        return r.json()
+
     def search(self, search_dict: dict, raw: bool = False):
         """
         Search for a resource
