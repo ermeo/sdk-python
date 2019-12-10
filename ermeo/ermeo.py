@@ -43,10 +43,12 @@ class ErmeoV1(object):
         from .common.folder import Folder
         from .common.auth import Auth
         from .common.user import User
+        from .common.widget import Widget
 
         self.folder = Folder(self)
         self.auth = Auth(self)
         self.user = User(self)
+        self.widget = Widget(self)
 
         return self
 

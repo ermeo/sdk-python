@@ -8,6 +8,7 @@ API_ERMEO_PROFILE_URL = 'profile'
 API_ERMEO_DOCUMENT_URL = 'documents'
 API_ERMEO_UPLOAD_URL = 'uploads'
 API_ERMEO_USER_URL = 'users'
+API_ERMEO_WIDGET_URL = 'widgets'
 
 API_LIMIT = 100
 API_SEARCH_URL = '/search'

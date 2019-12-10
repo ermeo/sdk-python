@@ -48,6 +48,6 @@ class Auth:
         """
         @return: Dict
         """
-        return {"Authorization": "Bearer " + self.ermeo_v1.access_token}
+        return {"Authorization": "Bearer " + self.ermeo_v1.access_token, "Content-Type": "application/json"}
 
 
