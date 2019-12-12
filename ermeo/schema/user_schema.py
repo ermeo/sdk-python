@@ -15,3 +15,11 @@ class UserSchema(Schema):
     role = fields.Nested(IdSchema)
     workspaces_available = fields.List(fields.Nested(IdSchema))
     locale = fields.Str()
+
+
+class RoleSchema(Schema):
+    code = fields.Str()
+    name = fields.Str(required=True)
+    enabled = fields.Bool(default=True)
+    platform_permission = fields.List(fields.Int())
+    app_permission = fields.List(fields.Int())
