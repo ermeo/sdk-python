@@ -9,99 +9,86 @@ from time import sleep
 def fixtures():
     faker = Faker()
     data = {
-        'user_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
-        'user_first_name': faker.first_name(),
-        'user_last_name': faker.first_name(),
-        'user_email': faker.email(),
-        'user_password': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
-        'user_is_enabled': faker.boolean(chance_of_getting_true=50),
-        'user_timezone': faker.timezone(),
-        'user_locale': random.choice(['en', 'fr']),
+        'team_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
+        'team_name': faker.job(),
+        'team_users': [{'id': API.user.list()[0]['id']}, {'id': API.user.list()[1]['id']}],
+        'team_leaders': [{'id': API.user.list()[0]['id']}],
+        'team_access_rights': [{'id': API.user.team.access_right.list()[0]['id']},
+                               {'id': API.user.team.access_right.list()[1]['id']}],
 
-        'user_updated_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
-        'user_updated_first_name': faker.first_name(),
-        'user_updated_last_name': faker.first_name(),
-        'user_updated_email': faker.email(),
-        'user_updated_is_enabled': faker.boolean(chance_of_getting_true=50),
-        'user_updated_timezone': faker.timezone(),
-        'user_updated_locale': random.choice(['en', 'fr']),
+        'team_updated_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
+        'team_updated_name': faker.job(),
+        'team_updated_users': [{'id': API.user.list()[0]['id']}, {'id': API.user.list()[1]['id']}, {'id': API.user.list()[3]['id']}],
+        'team_updated_leaders': [{'id': API.user.list()[0]['id']}, {'id': API.user.list()[2]['id']}],
+        'team_updated_access_rights': [{'id': API.user.team.access_right.list()[0]['id']},
+                               {'id': API.user.team.access_right.list()[1]['id']}],
     }
     return data
 
 
-def test_create_update_user(fixtures):
-    user = {
-        "code": fixtures["user_code"],
-        "first_name": fixtures["user_first_name"],
-        "last_name": fixtures["user_last_name"],
-        "email": fixtures["user_email"],
-        "password": fixtures["user_password"],
-        "is_enabled": fixtures["user_is_enabled"],
-        "timezone": fixtures["user_timezone"],
-        "locale": fixtures["user_locale"],
+def test_create_update_team(fixtures):
+    team = {
+        "code": fixtures["team_code"],
+        "name": fixtures["team_name"],
+        "users": fixtures["team_users"],
+        "leaders": fixtures["team_leaders"],
+        "access_rights": fixtures["team_access_rights"],
     }
-    user_created = API.user.create(user)
-    assert user_created["code"] == user["code"]
-    assert user_created["first_name"] == user["first_name"]
-    assert user_created["last_name"] == user["last_name"]
-    assert user_created["email"] == user["email"]
-    assert user_created["is_enabled"] == user["is_enabled"]
-    assert user_created["timezone"] == user["timezone"]
-    assert user_created["locale"] == user["locale"]
+    team_created = API.user.team.create(team)
+    assert team_created["code"] == team["code"]
+    assert team_created["name"] == team["name"]
+    assert len(team_created["users"]) == len(team["users"])
+    assert len(team_created["leaders"]) == len(team["leaders"])
+    assert len(team_created["access_rights"]) == len(team["access_rights"])
     sleep(SLEEP)
-    user_get = API.user.get(user_created["id"])
-    assert user_get["code"] == fixtures["user_code"]
+    team_get = API.user.team.get(team_created["id"])
+    assert team_get["code"] == fixtures["team_code"]
 
-    user_update = {
-        "code": fixtures["user_updated_code"],
-        "first_name": fixtures["user_updated_first_name"],
-        "last_name": fixtures["user_updated_last_name"],
-        "email": fixtures["user_updated_email"],
-        "is_enabled": fixtures["user_updated_is_enabled"],
-        "timezone": fixtures["user_updated_timezone"],
-        "locale": fixtures["user_updated_locale"],
+    team_update = {
+        "code": fixtures["team_updated_code"],
+        "name": fixtures["team_updated_name"],
+        "users": fixtures["team_updated_users"],
+        "leaders": fixtures["team_updated_leaders"],
+        "access_rights": fixtures["team_updated_access_rights"],
     }
-
-    user_updated = API.user.update(user_update, id=user_created["id"])
-    assert user_updated["code"] == user_update["code"]
-    assert user_updated["first_name"] == user_update["first_name"]
-    assert user_updated["last_name"] == user_update["last_name"]
-    assert user_updated["email"] == user_update["email"]
-    assert user_updated["is_enabled"] == user_update["is_enabled"]
-    assert user_updated["timezone"] == user_update["timezone"]
-    assert user_updated["locale"] == user_update["locale"]
+    team_updated = API.user.team.update(team_update, id=team_created["id"])
+    assert team_updated["code"] == team_update["code"]
+    assert team_updated["name"] == team_update["name"]
+    assert len(team_updated["users"]) == len(team_update["users"])
+    assert len(team_updated["leaders"]) == len(team_update["leaders"])
+    assert len(team_updated["access_rights"]) == len(team_update["access_rights"])
 
 
-def test_search_users(fixtures):
+def test_search_teams(fixtures):
     ## We sleep because the API Must reindex some results
     sleep(SLEEP)
-    search_user = \
-    [
-        {
-            "code": [
-                {
-                    "operator": "equals",
-                    "value": {
-                        "text": fixtures["user_updated_code"]
+    search_team = \
+        [
+            {
+                "code": [
+                    {
+                        "operator": "equals",
+                        "value": {
+                            "text": fixtures["team_updated_code"]
+                        }
                     }
-                }
-            ]
-        }
-    ]
-    user = API.user.search(search_dict=search_user)
-    assert user[0]["code"] == fixtures["user_updated_code"]
+                ]
+            }
+        ]
+    team = API.user.team.search(search_dict=search_team)
+    assert team[0]["code"] == fixtures["team_updated_code"]
 
 
-def test_get_users():
-    user = API.user.list(limit=1, sort="created_at:desc")
-    assert len(user) == 1
-    users = API.user.list(limit=2, sort="created_at:asc")
-    assert len(users) == 2
-    assert user[0]["code"] is not users[0]["code"]
+def test_get_teams():
+    team = API.user.team.list(limit=1, sort="created_at:desc")
+    assert len(team) == 1
+    teams = API.user.team.list(limit=2, sort="created_at:asc")
+    assert len(teams) == 2
+    assert team[0]["code"] is not teams[0]["code"]
 
-    user_raw = API.user.list(limit=1, raw=True)
-    user_recursive = API.user.list(limit=10, recursive=True)
-    assert int(user_raw["total_items"]) == len(user_recursive)
+    team_raw = API.user.team.list(limit=1, raw=True)
+    team_recursive = API.user.team.list(limit=10, recursive=True)
+    assert int(team_raw["total_items"]) == len(team_recursive)
 
     with pytest.raises(Exception):
-        API.user.list(limit=1, sort="created_ats:desc")
+        API.user.team.list(limit=1, sort="created_ats:desc")
