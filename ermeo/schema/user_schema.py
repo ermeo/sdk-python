@@ -1,6 +1,7 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
 from ermeo.schema.common_schema import IdSchema
 
+type_enum = ['document', 'asset', 'intervention', 'user', 'report']
 
 class UserSchema(Schema):
     code = fields.Str()
@@ -23,3 +24,21 @@ class RoleSchema(Schema):
     enabled = fields.Bool(default=True)
     platform_permission = fields.List(fields.Int())
     app_permission = fields.List(fields.Int())
+
+
+class AccessRightSchema(Schema):
+    code = fields.Str()
+    name = fields.Str(required=True)
+    description = fields.Str()
+    type = fields.Str(validate=[validate.OneOf(type_enum)])
+    full_access = fields.Bool()
+    full_write = fields.Bool()
+    hidden = fields.Bool()
+
+
+class TeamSchema(Schema):
+    code = fields.Str()
+    name = fields.Str(required=True)
+    users = fields.List(fields.Nested(IdSchema))
+    leaders = fields.List(fields.Nested(IdSchema))
+    access_rights = fields.List(fields.Nested(IdSchema))

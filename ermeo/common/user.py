@@ -1,7 +1,7 @@
-from ..const import API_ERMEO_USER_URL, API_ERMEO_ROLE_URL
+from ..const import API_ERMEO_USER_URL, API_ERMEO_ROLE_URL, API_ERMEO_TEAM_URL, API_ERMEO_ACCESS_RIGHT_URL
 from ..ermeo import ErmeoV1
 from ..resource import Resource
-from ..schema.user_schema import UserSchema, RoleSchema
+from ..schema.user_schema import UserSchema, RoleSchema, AccessRightSchema, TeamSchema
 
 
 ALL_PLATFORM_PERMISSIONS = [x for x in range(1, 74)]
@@ -14,6 +14,8 @@ class User(Resource):
     """
 
     def __init__(self, ermeo_v1: ErmeoV1):
+        self.role = None
+        self.team = None
         self.ermeo_v1 = ermeo_v1
         super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_USER_URL, UserSchema)
 
@@ -48,3 +50,27 @@ class Role(Resource):
         data["platform_permission"] = ALL_PLATFORM_PERMISSIONS
         data["app_permission"] = ALL_APP_PERMISSIONS
         return data
+
+
+class AccessRight(Resource):
+    """
+    @param ermeo_v1: ErmeoV1
+    """
+
+    def __init__(self, ermeo_v1: ErmeoV1):
+        self.ermeo_v1 = ermeo_v1
+        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_ACCESS_RIGHT_URL, AccessRightSchema)
+
+    def search(self, search_dict: dict, raw: bool = False):
+        raise NotImplementedError
+
+
+class Team(Resource):
+    """
+    @param ermeo_v1: ErmeoV1
+    """
+
+    def __init__(self, ermeo_v1: ErmeoV1):
+        self.access_right: AccessRight = None
+        self.ermeo_v1 = ermeo_v1
+        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_TEAM_URL, TeamSchema)

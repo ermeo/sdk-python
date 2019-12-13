@@ -9,6 +9,8 @@ API_ERMEO_DOCUMENT_URL = 'documents'
 API_ERMEO_UPLOAD_URL = 'uploads'
 API_ERMEO_USER_URL = 'users'
 API_ERMEO_ROLE_URL = 'roles'
+API_ERMEO_ACCESS_RIGHT_URL = 'access_rights'
+API_ERMEO_TEAM_URL = 'teams'
 API_ERMEO_WIDGET_URL = 'widgets'
 
 API_LIMIT = 100
