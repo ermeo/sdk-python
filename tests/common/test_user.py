@@ -17,6 +17,7 @@ def fixtures():
         'user_is_enabled': faker.boolean(chance_of_getting_true=50),
         'user_timezone': faker.timezone(),
         'user_locale': random.choice(['en', 'fr']),
+        'user_role': {'id': API.user.role.list()[0]['id']},
 
         'user_updated_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_updated_first_name': faker.first_name(),
@@ -39,6 +40,7 @@ def test_create_update_user(fixtures):
         "is_enabled": fixtures["user_is_enabled"],
         "timezone": fixtures["user_timezone"],
         "locale": fixtures["user_locale"],
+        "role": fixtures["user_role"],
     }
     user_created = API.user.create(user)
     assert user_created["code"] == user["code"]
@@ -48,6 +50,7 @@ def test_create_update_user(fixtures):
     assert user_created["is_enabled"] == user["is_enabled"]
     assert user_created["timezone"] == user["timezone"]
     assert user_created["locale"] == user["locale"]
+    assert user_created["role"]['id'] == user["role"]['id']
     sleep(SLEEP)
     user_get = API.user.get(user_created["id"])
     assert user_get["code"] == fixtures["user_code"]

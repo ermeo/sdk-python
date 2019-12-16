@@ -3,7 +3,7 @@ from marshmallow import Schema, fields, validate
 type_enum = ['action', 'multiple_choice', 'picture_choice', 'ab_choice', 'array', 'yes_no', 'opinion_scale',
              'location', 'phone_information', 'photo', 'signature', 'text', 'date', 'number', 'barcode', 'duration',
              'rating', 'send_emails', 'phone', 'image', 'asset', 'section', 'repeat_section', 'transfer', 'end_send',
-             'text_information', 'duration_information',
+             'text_information', 'duration_information', 'display_answer',
              'number_information', 'pdf', 'web_page', 'template', 'document', 'tools', 'hour']
 category_enum = ['task', 'organization', 'information']
 
@@ -15,6 +15,11 @@ class SettingSchema(Schema):
     wording_repeat = fields.Str()
     wording_delete = fields.Str()
     wording_end = fields.Str()
+    count_display_answer = fields.Int()
+    count_formwidget = fields.Int()
+    number_level = fields.Int()
+    footer = fields.Str()
+    header = fields.Str()
 
 
 class WidgetSchema(Schema):
