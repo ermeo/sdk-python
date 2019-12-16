@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields
-from ermeo.schema.common_schema import IdSchema
+from ermeopy.schema.common_schema import IdSchema
 
 
 class ResourceSchema(Schema):

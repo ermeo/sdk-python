@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, validate
-from ermeo.schema.common_schema import IdSchema
+from ermeopy.schema.common_schema import IdSchema
 
 type_enum = ['document', 'asset', 'intervention', 'user', 'report']
 

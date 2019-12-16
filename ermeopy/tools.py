@@ -1,6 +1,6 @@
 import requests
-from ermeo.const import API_ERMEO_PROFILE_URL
-from ermeo.ermeo import ErmeoV1
+from ermeopy.const import API_ERMEO_PROFILE_URL
+from ermeopy.ermeo import ErmeoV1
 
 
 class ErmeoTools(object):

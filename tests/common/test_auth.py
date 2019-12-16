@@ -1,8 +1,8 @@
 import pytest
 from tests.conf import *
 from faker import Faker
-from ermeo.ermeo import ErmeoV1
-from ermeo.tools import ErmeoTools
+from ermeopy.ermeo import ErmeoV1
+from ermeopy.tools import ErmeoTools
 
 
 @pytest.fixture(scope="module")

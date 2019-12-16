@@ -3,7 +3,7 @@ import random
 from tests.conf import *
 from faker import Faker
 from time import sleep
-from ermeo.schema.widget_schema import type_enum, category_enum
+from ermeopy.schema.widget_schema import type_enum, category_enum
 
 
 @pytest.fixture(scope="module")

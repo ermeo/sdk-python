@@ -1,5 +1,5 @@
 from decouple import config
-from ermeo.ermeo import ErmeoV1
+from ermeopy.ermeo import ErmeoV1
 
 USERNAME = config('API_ERMEO_USERNAME')
 PASSWORD = config('API_ERMEO_PASSWORD')

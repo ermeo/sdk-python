@@ -1,8 +1,8 @@
 import abc
 import requests
 from marshmallow import Schema
-from ermeo.ermeo import ErmeoV1
-from ermeo.const import API_LIMIT, API_SORT_DEFAULT, API_SEARCH_URL
+from ermeopy.ermeo import ErmeoV1
+from ermeopy.const import API_LIMIT, API_SORT_DEFAULT, API_SEARCH_URL
 
 
 class Resource(metaclass=abc.ABCMeta):
