@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sdk-ermeo',
-    version='1.18.3',
+    version='1.18.4',
     description='Ermeo SDK for interacting with the API',
     url='https://github.com/ermeo/sdk-python',
     author='Ermeo',
