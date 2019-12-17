@@ -77,6 +77,11 @@ def test_crud_user(fixtures):
     with pytest.raises(NotImplementedError):
         API.user.delete(user_created["id"])
 
+    #Update password
+    API.user.set_password(user_created['id'], user['password'])
+    #Get Profil
+    API.user.profil(user_created['id'])
+
 
 def test_search_users(fixtures):
     ## We sleep because the API Must reindex some results
