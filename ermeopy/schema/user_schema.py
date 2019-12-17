@@ -5,6 +5,7 @@ type_enum = ['document', 'asset', 'intervention', 'user', 'report']
 
 
 class UserSchema(Schema):
+    username = fields.Str()
     code = fields.Str()
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)

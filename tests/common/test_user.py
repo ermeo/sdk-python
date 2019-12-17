@@ -9,6 +9,7 @@ from time import sleep
 def fixtures():
     faker = Faker()
     data = {
+        'user_username': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_first_name': faker.first_name(),
         'user_last_name': faker.first_name(),
@@ -19,6 +20,7 @@ def fixtures():
         'user_locale': random.choice(['en', 'fr']),
         'user_role': {'id': API.user.role.list()[0]['id']},
 
+        'user_updated_username': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_updated_code': "".join(faker.random_letters(length=faker.random_int(min=3, max=99, step=1))),
         'user_updated_first_name': faker.first_name(),
         'user_updated_last_name': faker.first_name(),
@@ -32,6 +34,7 @@ def fixtures():
 
 def test_crud_user(fixtures):
     user = {
+        "username": fixtures["user_username"],
         "code": fixtures["user_code"],
         "first_name": fixtures["user_first_name"],
         "last_name": fixtures["user_last_name"],
