@@ -15,4 +15,3 @@ setup(
         'requests==v2.22.0', 'marshmallow==3.2.2', 'tox==3.14.2'
     ],
 )
-s
