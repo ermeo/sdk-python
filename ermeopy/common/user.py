@@ -1,3 +1,4 @@
+import requests
 from ..const import API_ERMEO_USER_URL, API_ERMEO_ROLE_URL, API_ERMEO_TEAM_URL, API_ERMEO_ACCESS_RIGHT_URL
 from ..ermeo import ErmeoV1
 from ..resource import Resource
@@ -22,6 +23,17 @@ class User(Resource):
 
     def delete(self, search_dict: dict, raw: bool = False):
         raise NotImplementedError
+
+    def set_password(self, id: str, password: str):
+        r = requests.post(self.api_ressource_url + '/' + id + '/password/update', json={'password': password},
+                         headers=self.ermeo_v1.auth.get_headers())
+        self.ermeo_v1.check_request(r)
+        return r.json()
+
+    def profil(self, id: str):
+        r = requests.get(self.api_ressource_url + '/' + id, headers=self.ermeo_v1.auth.get_headers())
+        self.ermeo_v1.check_request(r)
+        return r.json()
 
 
 class Role(Resource):
