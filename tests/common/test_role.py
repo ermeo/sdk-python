@@ -21,7 +21,7 @@ def fixtures():
     return data
 
 
-def test_create_update_role(fixtures):
+def test_crud_role(fixtures):
     role = {
         "code": fixtures["role_code"],
         "name": fixtures["role_name"],
@@ -53,6 +53,28 @@ def test_create_update_role(fixtures):
     assert len(role_updated["platform_permission"]) == len(role_update["platform_permission"])
     assert len(role_updated["app_permission"]) == len(role_update["app_permission"])
 
+    with pytest.raises(NotImplementedError):
+        API.user.role.delete(role_created["id"])
+
+
+def test_search_role(fixtures):
+    ## We sleep because the API Must reindex some results
+    sleep(SLEEP)
+    search_role = \
+        [
+            {
+                "code": [
+                    {
+                        "operator": "equals",
+                        "value": {
+                            "text": fixtures["role_updated_code"]
+                        }
+                    }
+                ]
+            }
+        ]
+    with pytest.raises(NotImplementedError):
+        API.user.role.search(search_dict=search_role)
 
 def test_get_roles():
     role = API.user.role.list(limit=1, sort="created_at:desc")

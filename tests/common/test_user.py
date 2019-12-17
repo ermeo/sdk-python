@@ -30,7 +30,7 @@ def fixtures():
     return data
 
 
-def test_create_update_user(fixtures):
+def test_crud_user(fixtures):
     user = {
         "code": fixtures["user_code"],
         "first_name": fixtures["user_first_name"],
@@ -73,6 +73,9 @@ def test_create_update_user(fixtures):
     assert user_updated["is_enabled"] == user_update["is_enabled"]
     assert user_updated["timezone"] == user_update["timezone"]
     assert user_updated["locale"] == user_update["locale"]
+
+    with pytest.raises(NotImplementedError):
+        API.user.delete(user_created["id"])
 
 
 def test_search_users(fixtures):

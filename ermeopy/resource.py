@@ -6,7 +6,7 @@ from ermeopy.const import API_LIMIT, API_SORT_DEFAULT, API_SEARCH_URL
 
 
 class Resource(metaclass=abc.ABCMeta):
-    def __init__(self, ermeo_v1: ErmeoV1, api_ressource_url: str, schema: Schema):
+    def __init__(self, ermeo_v1: ErmeoV1, api_ressource_url: str, schema: Schema, schema_update: Schema):
         """
         Init
         :param ermeo_v1:
@@ -17,6 +17,7 @@ class Resource(metaclass=abc.ABCMeta):
         self.ermeo_v1 = ermeo_v1
         self.api_ressource_url = api_ressource_url
         self.schema = schema
+        self.schema_update = schema_update
 
     def list(self, page: int = 1, limit: int = API_LIMIT, sort: str = API_SORT_DEFAULT, raw: bool = False,
             items: list = False, recursive: bool = False) -> list:
@@ -107,7 +108,7 @@ class Resource(metaclass=abc.ABCMeta):
         @return: Json
         """
 
-        validated_data = self.schema().load(data)
+        validated_data = self.schema_update().load(data)
         r = requests.put(self.api_ressource_url + '/' + id, json=validated_data, headers=self.ermeo_v1.auth.get_headers())
         self.ermeo_v1.check_request(r)
         return r.json()

@@ -30,3 +30,13 @@ class WidgetSchema(Schema):
     type = fields.Str(required=True, validate=[validate.OneOf(type_enum), ])
 
     settings = fields.Nested(SettingSchema)
+
+
+class WidgetSchemaUpdate(Schema):
+    code = fields.Str()
+    name = fields.Str()
+    icon = fields.Str()
+    category = fields.Str(validate=[validate.OneOf(category_enum)])
+    type = fields.Str(validate=[validate.OneOf(type_enum), ])
+
+    settings = fields.Nested(SettingSchema)

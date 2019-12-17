@@ -1,8 +1,8 @@
 from ..const import API_ERMEO_USER_URL, API_ERMEO_ROLE_URL, API_ERMEO_TEAM_URL, API_ERMEO_ACCESS_RIGHT_URL
 from ..ermeo import ErmeoV1
 from ..resource import Resource
-from ..schema.user_schema import UserSchema, RoleSchema, AccessRightSchema, TeamSchema
-
+from ..schema.user_schema import UserSchema, UserSchemaUpdate, RoleSchema, RoleSchemaUpdate, AccessRightSchema, \
+    AccessRightSchemaUpdate, TeamSchema, TeamSchemaUpdate
 
 ALL_PLATFORM_PERMISSIONS = [x for x in range(1, 74)]
 ALL_APP_PERMISSIONS = [x for x in range(1001, 1028)]
@@ -17,7 +17,8 @@ class User(Resource):
         self.role = None
         self.team = None
         self.ermeo_v1 = ermeo_v1
-        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_USER_URL, UserSchema)
+        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_USER_URL, UserSchema,
+                         UserSchemaUpdate)
 
     def delete(self, search_dict: dict, raw: bool = False):
         raise NotImplementedError
@@ -30,7 +31,8 @@ class Role(Resource):
 
     def __init__(self, ermeo_v1: ErmeoV1):
         self.ermeo_v1 = ermeo_v1
-        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_ROLE_URL, RoleSchema)
+        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_ROLE_URL, RoleSchema,
+                         RoleSchemaUpdate)
 
     def create(self, data: dict, admin: bool = False):
         data = self.set_admin_rights(data) if admin else data
@@ -59,7 +61,8 @@ class AccessRight(Resource):
 
     def __init__(self, ermeo_v1: ErmeoV1):
         self.ermeo_v1 = ermeo_v1
-        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_ACCESS_RIGHT_URL, AccessRightSchema)
+        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_ACCESS_RIGHT_URL,
+                         AccessRightSchema, AccessRightSchemaUpdate)
 
     def search(self, search_dict: dict, raw: bool = False):
         raise NotImplementedError
@@ -73,4 +76,5 @@ class Team(Resource):
     def __init__(self, ermeo_v1: ErmeoV1):
         self.access_right: AccessRight = None
         self.ermeo_v1 = ermeo_v1
-        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_TEAM_URL, TeamSchema)
+        super().__init__(ermeo_v1, self.ermeo_v1.api_ermeo_ressources_url + API_ERMEO_TEAM_URL, TeamSchema,
+                         TeamSchemaUpdate)
